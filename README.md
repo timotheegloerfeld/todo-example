@@ -18,9 +18,14 @@ To start the client:
 
 ## Used Technologies
 
+Backend
+
 - .Net 5
 - Entity Framework Core
 - Hot Chocolate
+
+Frontend
+
 - React
 - Next.js
 - Chakra UI
