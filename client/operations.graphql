@@ -1,0 +1,42 @@
+query Todos {
+  todos {
+    id
+    text
+    isDone
+  }
+}
+
+mutation Check($id: Uuid!) {
+  checkTodo(id: $id) {
+    id
+    isDone
+  }
+}
+
+mutation Uncheck($id: Uuid!) {
+  uncheckTodo(id: $id) {
+    id
+    isDone
+  }
+}
+
+mutation Add($text: String!) {
+  addTodo(text: $text) {
+    id
+    text
+    isDone
+  }
+}
+
+mutation Delete($id: Uuid!) {
+  deleteTodo(id: $id) {
+    id
+  }
+}
+
+mutation Rename($id: Uuid!, $text: String!) {
+  renameTodo(id: $id, text: $text) {
+    id
+    text
+  }
+}
