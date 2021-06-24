@@ -1,11 +1,11 @@
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using TasksClone.Features.Todos;
 
 namespace server
@@ -46,9 +46,10 @@ namespace server
                     .AddTypeExtension<Delete.Mutation>();
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+
+            services.AddSpaStaticFiles(configuration =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "server", Version = "v1" });
+                configuration.RootPath = "../../client/build";
             });
         }
 
@@ -58,9 +59,10 @@ namespace server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "server v1"));
             }
+
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
             app.UseRouting();
 
@@ -71,6 +73,16 @@ namespace server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGraphQL();
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "../../client";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "dev");
+                }
             });
         }
     }
