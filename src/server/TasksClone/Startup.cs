@@ -1,11 +1,16 @@
+using System;
+using System.IO;
+using System.Linq;
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using TasksClone.Features.Todos;
 
 namespace server
@@ -29,7 +34,7 @@ namespace server
                 options.AddDefaultPolicy(builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:3000")
+                        .WithOrigins("http://localhost:3000", "http://localhost:5000", "https://localhost:5001")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -46,15 +51,10 @@ namespace server
                     .AddTypeExtension<Delete.Mutation>();
 
             services.AddControllers();
-
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "../../client/build";
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -73,16 +73,6 @@ namespace server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGraphQL();
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "../../client";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "dev");
-                }
             });
         }
     }
